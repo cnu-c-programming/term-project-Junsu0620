@@ -134,10 +134,45 @@ ShellResult C_exit(void)
     return SHELL_EXIT;
 }
 
-ShellResult C_save(Student* head, const char* filename) {}
+ShellResult C_save(Student* head, const char* filename) {
+    if (save_students(filename, head) < 0)
+        return SHELL_ERROR;
 
-ShellResult C_add(Student** head, char* args) {}
+    return SHELL_OK;
+}
 
-ShellResult C_delete(Student** head, char* args) {}
+ShellResult C_add(Student** head, char* args) {
+    int id;
+    int score;
+    char name[32];
 
-ShellResult C_update(Student* head, char* args) {}
+    if (sscanf(args,"%d %31s %d", &id, name, &score) != 3)
+        return SHELL_ERROR;
+
+    if (!add_student(head, id, name, score))
+        return SHELL_ERROR;
+
+    return SHELL_OK;
+}
+
+ShellResult C_delete(Student** head, char* args) {
+    int id = atoi(args);
+
+    if (!delete_student(head, id))
+        return SHELL_ERROR;
+
+    return SHELL_OK;
+}
+
+ShellResult C_update(Student* head, char* args) {
+    int id;
+    int score;
+
+    if (sscanf(args,"%d %d", &id, &score) != 2)
+        return SHELL_ERROR;
+
+    if (!update_student(head, id, score))
+        return SHELL_ERROR;
+
+    return SHELL_OK;
+}
